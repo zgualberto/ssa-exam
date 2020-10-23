@@ -8,6 +8,7 @@ use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class RegisterController extends Controller
 {
@@ -21,6 +22,8 @@ class RegisterController extends Controller
     | provide this functionality without requiring any additional code.
     |
     */
+
+    protected $preffixnames = ['Mr', 'Mrs', 'Ms'];
 
     use RegistersUsers;
 
@@ -50,15 +53,14 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
+            'prefixname' => ['required', Rule::in($this->preffixnames)],
             'firstname' => ['required', 'string', 'max:255'],
             'middlename' => ['string', 'max:255'],
             'lastname' => ['required', 'string', 'max:255'],
             'suffixname' => ['string', 'max:255'],
             'username' => ['required', 'string', 'max:255', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'photo' => ['string'],
-            'type' => ['string', 'max:255']
+            'password' => ['required', 'string', 'min:8', 'confirmed']
         ]);
     }
 
@@ -71,9 +73,15 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'name' => $data['name'],
+            'prefixname' => $data['prefixname'],
+            'firstname' => $data['firstname'],
+            'middlename' => $data['middlename'],
+            'lastname' => $data['lastname'],
+            'suffixname' => $data['suffixname'],
+            'username' => $data['username'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'type' => 'user'
         ]);
     }
 }
