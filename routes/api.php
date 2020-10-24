@@ -17,3 +17,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+
+Route::prefix('user')->middleware('auth')->group(function () {
+    Route::delete('{id}', 'UsersController@destroy')->name('users.delete');
+    Route::put('{id}', 'UsersController@update')->name('users.update');
+});

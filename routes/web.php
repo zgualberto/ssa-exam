@@ -20,3 +20,10 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/users', 'UsersController@index')->name('users');
+
+Route::prefix('user')->group(function () {
+    Route::get('new', 'UsersController@create')->name('users.create');
+    Route::get('{id}', 'UsersController@show')->name('users.show');
+});

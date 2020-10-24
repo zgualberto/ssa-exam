@@ -19,7 +19,12 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
+import BootstrapVue from "bootstrap-vue";
+Vue.use(BootstrapVue);
+
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('user-form', require('./components/UserForm.vue').default);
+Vue.component('user-list', require('./components/UserList.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

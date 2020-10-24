@@ -12,16 +12,22 @@
                         @csrf
 
                         <div class="form-group row">
-                            <label for="preffixname" class="col-md-4 col-form-label text-md-right">{{ __('Prefix Name:') }}</label>
+                            <label for="prefixname" class="col-md-4 col-form-label text-md-right">{{ __('Prefix Name:') }}</label>
 
                             <div class="col-md-6">
-                                <select id="preffixname" class="form-control @error('preffixname') is-invalid @enderror" name="preffixname" autocomplete="preffixname" autofocus>
+                                <select
+                                    id="prefixname"
+                                    class="form-control @error('prefixname') is-invalid @enderror"
+                                    name="prefixname"
+                                    autocomplete="prefixname"
+                                    autofocus
+                                >
                                     <option value="Mr">Mr</option>
                                     <option value="Mrs">Mrs</option>
                                     <option value="Ms">Ms</option>
                                 </select>
 
-                                @error('preffixname')
+                                @error('prefixname')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -30,10 +36,20 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="firstname" class="col-md-4 col-form-label text-md-right">{{ __('First Name:') }}</label>
+                            <label
+                                for="firstname"
+                                class="col-md-4 col-form-label text-md-right"
+                            >{{ __('First Name:') }}</label>
 
                             <div class="col-md-6">
-                                <input type="text" id="firstname" class="form-control @error('firstname') is-invalid @enderror" name="firstname" required autocomplete="firstname">
+                                <input
+                                    type="text"
+                                    id="firstname"
+                                    class="form-control @error('firstname') is-invalid @enderror"
+                                    name="firstname"
+                                    required
+                                    autocomplete="firstname"
+                                >
 
                                 @error('firstname')
                                     <span class="invalid-feedback" role="alert">
@@ -44,18 +60,37 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="middlename" class="col-md-4 col-form-label text-md-right">{{ __('Middle Name:') }}</label>
+                            <label
+                                for="middlename"
+                                class="col-md-4 col-form-label text-md-right"
+                            >{{ __('Middle Name:') }}</label>
 
                             <div class="col-md-6">
-                                <input type="text" id="middlename" class="form-control" name="middlename" autocomplete="middlename">
+                                <input
+                                    type="text"
+                                    id="middlename"
+                                    class="form-control"
+                                    name="middlename"
+                                    autocomplete="middlename"
+                                >
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="lastname" class="col-md-4 col-form-label text-md-right">{{ __('Last Name:') }}</label>
+                            <label
+                                for="lastname"
+                                class="col-md-4 col-form-label text-md-right"
+                            >{{ __('Last Name:') }}</label>
 
                             <div class="col-md-6">
-                                <input type="text" id="lastname" class="form-control @error('lastname') is-invalid @enderror" name="lastname" required autocomplete="lastname">
+                                <input
+                                    type="text"
+                                    id="lastname"
+                                    class="form-control @error('lastname') is-invalid @enderror"
+                                    name="lastname"
+                                    required
+                                    autocomplete="lastname"
+                                >
 
                                 @error('lastname')
                                     <span class="invalid-feedback" role="alert">
@@ -66,18 +101,36 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="suffixname" class="col-md-4 col-form-label text-md-right">{{ __('Suffix Name:') }}</label>
+                            <label
+                                for="suffixname"
+                                class="col-md-4 col-form-label text-md-right"
+                            >{{ __('Suffix Name:') }}</label>
 
                             <div class="col-md-6">
-                                <input type="text" id="suffixname" class="form-control" name="suffixname" autocomplete="suffixname">
+                                <input
+                                    type="text"
+                                    id="suffixname"
+                                    class="form-control"
+                                    name="suffixname"
+                                    autocomplete="suffixname"
+                                >
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="username" class="col-md-4 col-form-label text-md-right">{{ __('Username:') }}</label>
+                            <label
+                                for="username"
+                                class="col-md-4 col-form-label text-md-right"
+                            >{{ __('Username:') }}</label>
 
                             <div class="col-md-6">
-                                <input type="text" id="username" class="form-control @error('username') is-invalid @enderror" name="username" autocomplete="username">
+                                <input
+                                    type="text"
+                                    id="username"
+                                    class="form-control @error('username') is-invalid @enderror"
+                                    name="username"
+                                    autocomplete="username"
+                                >
 
                                 @error('username')
                                     <span class="invalid-feedback" role="alert">
@@ -88,10 +141,20 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+                            <label
+                                for="email"
+                                class="col-md-4 col-form-label text-md-right"
+                            >{{ __('E-Mail Address') }}</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+                                <input
+                                    id="email"
+                                    type="email"
+                                    class="form-control @error('email') is-invalid @enderror"
+                                    name="email"
+                                    value="{{ old('email') }}"
+                                    required
+                                    autocomplete="email">
 
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
@@ -105,7 +168,13 @@
                             <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
 
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password">
+                                <input
+                                    id="password"
+                                    type="password"
+                                    class="form-control @error('password') is-invalid @enderror"
+                                    name="password"
+                                    autocomplete="new-password"
+                                >
 
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
@@ -116,24 +185,19 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
+                            <label
+                                for="password-confirm"
+                                class="col-md-4 col-form-label text-md-right"
+                            >{{ __('Confirm Password') }}</label>
 
                             <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password">
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="photo" class="col-md-4 col-form-label text-md-right">{{ __('Profile Picture') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="photo" type="file" class="form-control-file @error('photo') is-invalid @enderror" name="photo" required>
-
-                                @error('photo')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                                <input
+                                    id="password-confirm"
+                                    type="password"
+                                    class="form-control"
+                                    name="password_confirmation"
+                                    autocomplete="new-password"
+                                >
                             </div>
                         </div>
 

@@ -23,7 +23,7 @@ class RegisterController extends Controller
     |
     */
 
-    protected $preffixnames = ['Mr', 'Mrs', 'Ms'];
+    protected $prefixnames = ['Mr', 'Mrs', 'Ms'];
 
     use RegistersUsers;
 
@@ -53,7 +53,7 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'prefixname' => ['required', Rule::in($this->preffixnames)],
+            'prefixname' => ['required', Rule::in($this->prefixnames)],
             'firstname' => ['required', 'string', 'max:255'],
             'middlename' => ['string', 'max:255'],
             'lastname' => ['required', 'string', 'max:255'],
@@ -61,7 +61,6 @@ class RegisterController extends Controller
             'username' => ['required', 'string', 'max:255', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'photo' => ['required']
         ]);
     }
 
@@ -82,7 +81,6 @@ class RegisterController extends Controller
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'photo' => base64_encode($data['photo']),
             'type' => 'user'
         ]);
     }
