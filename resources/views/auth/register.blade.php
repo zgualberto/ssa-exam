@@ -77,7 +77,7 @@
                             <label for="username" class="col-md-4 col-form-label text-md-right">{{ __('Username:') }}</label>
 
                             <div class="col-md-6">
-                                <input type="text" id="username" class="form-control @error('username') is-invalid @enderror" name="username" required autocomplete="username">
+                                <input type="text" id="username" class="form-control @error('username') is-invalid @enderror" name="username" autocomplete="username">
 
                                 @error('username')
                                     <span class="invalid-feedback" role="alert">
@@ -105,7 +105,7 @@
                             <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
 
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password">
 
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
@@ -119,7 +119,21 @@
                             <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
 
                             <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="photo" class="col-md-4 col-form-label text-md-right">{{ __('Profile Picture') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="photo" type="file" class="form-control-file @error('photo') is-invalid @enderror" name="photo" required>
+
+                                @error('photo')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
                         </div>
 
