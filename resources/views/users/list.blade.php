@@ -2,9 +2,12 @@
 
 @section('content')
 <div class="container">
-    <div class="p-3 text-right">
-        <a class="btn btn-outline-primary" href="user/create">Add New User</a>
-    </div>
+    <h3 class="p-3">{{ $caption }}</h3>
+    @if ($caption == 'Active Users')
+        <div class="p-3 text-right">
+            <a class="btn btn-outline-primary" href="user/create">Add New User</a>
+        </div>
+    @endif
     <user-list :users="{{ json_encode($users) }}" :actions="{{ json_encode($actions) }}"/>
 </div>
 @endsection

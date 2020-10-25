@@ -6,6 +6,7 @@ use App\User;
 use App\Http\Resources\Users as UsersResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Auth;
@@ -34,7 +35,8 @@ class UsersController extends Controller
     {
         return view('users/list', array(
             'users' => User::paginate(15),
-            'actions' => ['show', 'edit', 'delete']
+            'actions' => ['show', 'edit', 'delete'],
+            'caption' => 'Active Users'
         ));
     }
 
@@ -112,6 +114,13 @@ class UsersController extends Controller
         // Get user
         $user = User::findOrFail($id);
 
+        if (preg_match('/^data:image\/(\w+);base64,/', $request->input('photo'))) {
+            $data = substr($request->input('photo'), strpos($request->input('photo'), ',') + 1);
+
+            $data = base64_decode($data);
+            Storage::disk('local')->put($request->input('photo_filename'), $data);
+        }
+
         if ($this->validator((array) $request->all(), $id) !== false) {
             $user->prefixname = $request->input('prefixname');
             $user->firstname = $request->input('firstname');
@@ -122,6 +131,9 @@ class UsersController extends Controller
             $user->email = $request->input('email');
             if (!empty($request->input('password'))) {
                 $user->password = Hash::make($request->input('password'));
+            }
+            if (!empty($request->input('photo'))) {
+                $user->photo = $request->input('photo_filename');
             }
 
             if($user->save()) {
@@ -183,7 +195,8 @@ class UsersController extends Controller
 
         return view('users/list', array(
             'users' => $users->paginate(15),
-            'actions' => ['restore', 'force-delete']
+            'actions' => ['restore', 'force-delete'],
+            'caption' => 'Trashed Users'
         ));
     }
 
