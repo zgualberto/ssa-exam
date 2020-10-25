@@ -56,6 +56,14 @@
                 {{ user.email }}
             </b-col>
         </b-row>
+        <b-row align-v="center" class="p-2">
+            <b-col md="4" class="text-right">
+                Avatar:
+            </b-col>
+            <b-col md="6">
+                <b-img id="imgPrev" :src="'/avatar/' + user.photo" rounded="circle" alt="Circle image" width="100" height="100"></b-img>
+            </b-col>
+        </b-row>
     </b-container>
 </template>
 

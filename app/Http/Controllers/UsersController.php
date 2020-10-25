@@ -118,7 +118,7 @@ class UsersController extends Controller
             $data = substr($request->input('photo'), strpos($request->input('photo'), ',') + 1);
 
             $data = base64_decode($data);
-            Storage::disk('local')->put($request->input('photo_filename'), $data);
+            Storage::disk('public')->put($request->input('photo_filename'), $data);
         }
 
         if ($this->validator((array) $request->all(), $id) !== false) {

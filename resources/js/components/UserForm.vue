@@ -86,7 +86,7 @@
             </b-col>
         </b-row>
         <b-row id="imgHolder" class="d-none">
-            <b-col md="4" class="text-right">Image Preview</b-col>
+            <b-col md="4" class="text-right">Avatar Preview:</b-col>
             <b-col md="6">
                 <b-img id="imgPrev" rounded="circle" alt="Circle image" width="100" height="100"></b-img>
             </b-col>
@@ -100,9 +100,6 @@
         <b-modal id="success" title="BootstrapVue">
             <p class="my-4">Successfully updated!</p>
         </b-modal>
-        <div>
-            <canvas id="image"></canvas>
-        </div>
     </b-container>
 </template>
 
