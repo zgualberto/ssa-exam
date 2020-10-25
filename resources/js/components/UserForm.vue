@@ -78,6 +78,9 @@
                 <b-button variant="primary" @click="updateUser">Update</b-button>
             </b-col>
         </b-row>
+        <b-modal id="success" title="BootstrapVue">
+            <p class="my-4">Successfully updated!</p>
+        </b-modal>
     </b-container>
 </template>
 
@@ -132,7 +135,7 @@ export default {
                 }
             })
             .then(({data}) => {
-                console.log(data);
+                this.$bvModal.show("success")
             })
             .catch(err => console.log(err));
         }
@@ -141,5 +144,8 @@ export default {
 </script>
 
 <style>
-
+.modal-backdrop
+{
+    opacity:0.5 !important;
+}
 </style>

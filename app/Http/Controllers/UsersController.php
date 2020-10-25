@@ -98,7 +98,9 @@ class UsersController extends Controller
             $user->suffixname = $request->input('suffixname');
             $user->username = $request->input('username');
             $user->email = $request->input('email');
-            $user->password = Hash::make($request->input('password'));
+            if (!empty($request->input('password'))) {
+                $user->password = Hash::make($request->input('password'));
+            }
 
             if($user->save()) {
                 return new UsersResource($user);
@@ -114,9 +116,9 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::find($id)->delete();
+        User::find($id)->delete();
 
-        return new UsersResource($user);
+        return new UsersResource(User::all());
     }
 
     /**
