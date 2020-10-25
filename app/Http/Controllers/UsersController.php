@@ -32,7 +32,10 @@ class UsersController extends Controller
      */
     public function index()
     {
-        return view('users/index', array('users' => User::all()));
+        return view('users/list', array(
+            'users' => User::paginate(15),
+            'actions' => ['show', 'edit', 'delete']
+        ));
     }
 
     /**
@@ -42,7 +45,7 @@ class UsersController extends Controller
      */
     public function create()
     {
-        //
+        return view('users/create');
     }
 
     /**
@@ -53,7 +56,24 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = new User;
+
+        if ($this->validator((array) $request->all()) !== false) {
+            $user->prefixname = $request->input('prefixname');
+            $user->firstname = $request->input('firstname');
+            $user->middlename = $request->input('middlename');
+            $user->lastname = $request->input('lastname');
+            $user->suffixname = $request->input('suffixname');
+            $user->username = $request->input('username');
+            $user->email = $request->input('email');
+            if (!empty($request->input('password'))) {
+                $user->password = Hash::make($request->input('password'));
+            }
+
+            if($user->save()) {
+                return new UsersResource($user);
+            }
+        }
     }
 
     /**
@@ -64,7 +84,9 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        return view('users/show', array('user' => User::find($id)));
+        return view('users/show', array(
+            'user' => User::find($id)
+        ));
     }
 
     /**
@@ -75,7 +97,7 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
-        //
+        return view('users/edit', array('user' => User::find($id)));
     }
 
     /**
@@ -109,6 +131,21 @@ class UsersController extends Controller
     }
 
     /**
+     * Restore the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id)
+    {
+        $user = User::onlyTrashed()->where('id', $id)->restore();
+        $users = User::onlyTrashed();
+
+
+        return UsersResource::collection($users->paginate(15));
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
@@ -118,7 +155,36 @@ class UsersController extends Controller
     {
         User::find($id)->delete();
 
-        return new UsersResource(User::all());
+        return UsersResource::collection(User::paginate(15));
+    }
+
+    /**
+     * Force remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function forceDelete($id)
+    {
+        User::onlyTrashed()->where('id', $id)->forceDelete();
+        $users = User::onlyTrashed();
+
+        return UsersResource::collection($users->paginate(15));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function trashed()
+    {
+        $users = User::onlyTrashed();
+
+        return view('users/list', array(
+            'users' => $users->paginate(15),
+            'actions' => ['restore', 'force-delete']
+        ));
     }
 
     /**

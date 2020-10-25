@@ -10,19 +10,10 @@ class UserSeeder extends Seeder
      * @return void
      */
 
-    protected $prefixnames = ['Mr', 'Mrs', 'Ms'];
     public function run()
     {
-        DB::table('users')->insert([
-            'prefixname' => $this->prefixnames[rand(0,2)],
-            'firstname' => Str::random(10),
-            'middlename' => Str::random(10),
-            'lastname' => Str::random(10),
-            'suffixname' => Str::random(10),
-            'username' => Str::random(10),
-            'email' => Str::random(10).'@gmail.com',
-            'password' => Hash::make('password'),
-            'type' => 'user'
-        ]);
+        factory(App\User::class, 50)->create()->each(function ($user) {
+            $user->save();
+        });
     }
 }

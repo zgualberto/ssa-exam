@@ -21,6 +21,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::prefix('user')->middleware('auth')->group(function () {
-    Route::delete('{id}', 'UsersController@destroy')->name('users.delete');
+    Route::post('', 'UsersController@store')->name('users.create');
+    Route::delete('{id}', 'UsersController@destroy')->name('users.trashed');
+    Route::delete('force-delete/{id}', 'UsersController@forceDelete')->name('users.delete');
     Route::put('{id}', 'UsersController@update')->name('users.update');
+    Route::patch('{id}', 'UsersController@restore')->name('users.restore');
 });

@@ -75,7 +75,7 @@
         <b-row align-v="center" class="p-2">
             <b-col md="4" class="text-right"></b-col>
             <b-col md="6" class="text-left">
-                <b-button variant="primary" @click="updateUser">Update</b-button>
+                <b-button variant="primary" @click="saveUser">{{ undefined !== user.id ? 'Update' : 'Create' }}</b-button>
             </b-col>
         </b-row>
         <b-modal id="success" title="BootstrapVue">
@@ -90,19 +90,21 @@ import axios from 'axios';
 export default {
     props: {
         user: {
-            prefixname: null,
-            firstname: null,
-            middlename: null,
-            lastname: null,
-            suffixname: null,
-            username: null,
-            email: null,
-            password: null,
-            password_confirm: null
-        },
-        csrf: {
-            type: String,
-            default: ""
+            type: Object,
+            default: () => {
+                return {
+                    prefixname: { value: 'Mr', text: 'Mr' },
+                    firstname: null,
+                    middlename: null,
+                    lastname: null,
+                    suffixname: null,
+                    username: null,
+                    email: null,
+                    password: null,
+                    password_confirm: null,
+                }
+            },
+            required: false
         }
     },
     data() {
@@ -115,29 +117,52 @@ export default {
         }
     },
     methods: {
-        updateUser() {
-            console.log('running')
-            axios.put(`/api/user/${this.user.id}`, {
-                prefixname: this.user.prefixname,
-                firstname: this.user.firstname,
-                middlename: this.user.middlename,
-                lastname: this.user.lastname,
-                suffixname: this.user.suffixname,
-                username: this.user.username,
-                email: this.user.email,
-                password: this.user.password,
-                password_confirm: this.user.password_confirm,
-                _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
-            },
-            {
-                headers: {
-                   'X-CSRF-TOKEN': document.querySelector("meta[name='csrf-token']").getAttribute('content')
-                }
-            })
-            .then(({data}) => {
-                this.$bvModal.show("success")
-            })
-            .catch(err => console.log(err));
+        saveUser() {
+            if (this.user.id) {
+                axios.put(`/api/user/${this.user.id}`, {
+                    prefixname: this.user.prefixname,
+                    firstname: this.user.firstname,
+                    middlename: this.user.middlename,
+                    lastname: this.user.lastname,
+                    suffixname: this.user.suffixname,
+                    username: this.user.username,
+                    email: this.user.email,
+                    password: this.user.password,
+                    password_confirm: this.user.password_confirm,
+                    _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
+                },
+                {
+                    headers: {
+                    'X-CSRF-TOKEN': document.querySelector("meta[name='csrf-token']").getAttribute('content')
+                    }
+                })
+                .then(({data}) => {
+                    this.$bvModal.show("success")
+                })
+                .catch(err => console.log(err));
+            } else {
+                axios.post(`/api/user`, {
+                    prefixname: this.user.prefixname,
+                    firstname: this.user.firstname,
+                    middlename: this.user.middlename,
+                    lastname: this.user.lastname,
+                    suffixname: this.user.suffixname,
+                    username: this.user.username,
+                    email: this.user.email,
+                    password: this.user.password,
+                    password_confirm: this.user.password_confirm,
+                    _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
+                },
+                {
+                    headers: {
+                    'X-CSRF-TOKEN': document.querySelector("meta[name='csrf-token']").getAttribute('content')
+                    }
+                })
+                .then(({data}) => {
+                    location.href = '/users'
+                })
+                .catch(err => console.log(err));
+            }
         }
     },
 }
