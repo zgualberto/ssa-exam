@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
+use App\Http\Resources\Users as UsersResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use App\Http\Requests;
-use App\User;
-use App\Http\Resources\Users as UsersResource;
 use Auth;
 
 class UsersController extends Controller
@@ -27,22 +26,56 @@ class UsersController extends Controller
     }
 
     /**
-     * List all users.
+     * Display a listing of the resource.
      *
-     * @return \Illuminate\View\View
+     * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index()
+    {
         return view('users/index', array('users' => User::all()));
     }
 
     /**
-     * Show a user.
+     * Show the form for creating a new resource.
      *
-     * @param int $id User Id
-     * @return \Illuminate\View\View
+     * @return \Illuminate\Http\Response
      */
-    public function show($id) {
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
         return view('users/show', array('user' => User::find($id)));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
     }
 
     /**
@@ -54,8 +87,8 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Get event
-        $user = User::findOrFail($id)->first();
+        // Get user
+        $user = User::findOrFail($id);
 
         if ($this->validator((array) $request->all(), $id) !== false) {
             $user->prefixname = $request->input('prefixname');
@@ -74,25 +107,16 @@ class UsersController extends Controller
     }
 
     /**
-     * Soft delete a user.
+     * Remove the specified resource from storage.
      *
-     * @param int $id User Id
-     * @return \Illuminate\View\View
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
-        User::find($id)->delete();
+    public function destroy($id)
+    {
+        $user = User::find($id)->delete();
 
-
-        return redirect('/users');
-    }
-
-    /**
-     * View user's profile.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function profile() {
-        return view('users/profile', array('user' => Auth::user()));
+        return new UsersResource($user);
     }
 
     /**
