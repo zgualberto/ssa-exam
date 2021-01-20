@@ -30,6 +30,13 @@
                 </b-tr>
             </b-tbody>
         </b-table-simple>
+        <b-pagination
+            v-model="currentPage"
+            :total-rows="totalRows"
+            :per-page="limit"
+            first-number
+            @change="updateData($event)"
+        ></b-pagination>
     </b-container>
 </template>
 
@@ -46,10 +53,24 @@ export default {
             type: Array,
             default: () => []
         },
+        count: {
+            type: Number,
+            default: 0
+        },
+        limit: {
+            type: Number,
+            default: 0
+        },
+        page: {
+            type: Number,
+            default: 0
+        },
     },
     data() {
         return {
-            usersObj: []
+            usersObj: [],
+            currentPage: this.page,
+            totalRows: this.count
         }
     },
     mounted() {
@@ -72,6 +93,7 @@ export default {
             })
             .then(({data}) => {
                 this.usersObj = data.data;
+                this.totalRows -= 1;
             })
             .catch(err => console.log(err));
         },
@@ -84,6 +106,7 @@ export default {
             })
             .then(({data}) => {
                 this.usersObj = data.data;
+                this.totalRows -= 1;
             })
             .catch(err => console.log(err));
         },
@@ -96,9 +119,13 @@ export default {
             })
             .then(({data}) => {
                 this.usersObj = data.data;
+                this.totalRows -= 1;
             })
             .catch(err => console.log(err));
         },
+        updateData(e) {
+            location.href = `?page=${e}`;
+        }
     },
 }
 </script>

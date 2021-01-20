@@ -29,12 +29,17 @@ class UsersController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $users = User::all();
         return view('users/list', array(
-            'users' => User::paginate(15),
+            'users' => User::offset(env('APP_PAGINATION', 15) * $request->input('page'))->paginate(env('APP_PAGINATION', 15)),
+            'users_count' => $users->count(),
+            'page'  => (!empty($request->input('page')) ? $request->input('page') : 1),
+            'limit' => env('APP_PAGINATION', 15),
             'actions' => ['show', 'edit', 'delete'],
             'caption' => 'Active Users'
         ));
@@ -168,7 +173,7 @@ class UsersController extends Controller
         $users = User::onlyTrashed();
 
 
-        return UsersResource::collection($users->paginate(15));
+        return UsersResource::collection($users->paginate(env('APP_PAGINATION', 15)));
     }
 
     /**
@@ -181,7 +186,7 @@ class UsersController extends Controller
     {
         User::find($id)->delete();
 
-        return UsersResource::collection(User::paginate(15));
+        return UsersResource::collection(User::paginate(env('APP_PAGINATION', 15)));
     }
 
     /**
@@ -195,20 +200,26 @@ class UsersController extends Controller
         User::onlyTrashed()->where('id', $id)->forceDelete();
         $users = User::onlyTrashed();
 
-        return UsersResource::collection($users->paginate(15));
+        return UsersResource::collection($users->paginate(env('APP_PAGINATION', 15)));
     }
 
     /**
      * Remove the specified resource from storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function trashed()
+    public function trashed(Request $request)
     {
         $users = User::onlyTrashed();
+        $count = $users->count();
+        $users->offset(env('APP_PAGINATION', 15) * $request->input('page'));
 
         return view('users/list', array(
-            'users' => $users->paginate(15),
+            'users' => $users->paginate(env('APP_PAGINATION', 15)),
+            'users_count' => $count,
+            'limit' => env('APP_PAGINATION', 15),
+            'page'  => (!empty($request->input('page')) ? $request->input('page') : 1),
             'actions' => ['restore', 'force-delete'],
             'caption' => 'Trashed Users'
         ));

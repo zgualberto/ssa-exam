@@ -8,6 +8,12 @@
             <a class="btn btn-outline-primary" href="user/create">Add New User</a>
         </div>
     @endif
-    <user-list :users="{{ json_encode($users) }}" :actions="{{ json_encode($actions) }}"/>
+    <user-list 
+        :users="{{ json_encode($users) }}" 
+        :count="{{ $users_count }}" 
+        :limit="{{ $limit }}" 
+        :actions="{{ json_encode($actions) }}"
+        :page="{{ $page }}"
+    />
 </div>
 @endsection
