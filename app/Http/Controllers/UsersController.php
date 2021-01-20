@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Http\Resources\Users as UsersResource;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Auth;
 
 class UsersController extends Controller
 {
@@ -58,9 +58,18 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        $user = new User;
+        if ($this->validator((array) $request->all())) {
 
-        if ($this->validator((array) $request->all()) !== false) {
+            $user = new User;
+            if (!empty($request->input('photo'))) {
+                if (preg_match('/^data:image\/(\w+);base64,/', $request->input('photo'))) {
+                    $data = substr($request->input('photo'), strpos($request->input('photo'), ',') + 1);
+        
+                    $data = base64_decode($data);
+                    Storage::disk('public')->put($request->input('photo_filename'), $data);
+                }
+            }
+
             $user->prefixname = $request->input('prefixname');
             $user->firstname = $request->input('firstname');
             $user->middlename = $request->input('middlename');
@@ -68,6 +77,9 @@ class UsersController extends Controller
             $user->suffixname = $request->input('suffixname');
             $user->username = $request->input('username');
             $user->email = $request->input('email');
+            if (!empty($request->input('photo'))) {
+                $user->photo = $request->input('photo_filename');
+            }
             if (!empty($request->input('password'))) {
                 $user->password = Hash::make($request->input('password'));
             }
@@ -84,7 +96,7 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         return view('users/show', array(
             'user' => User::find($id)
@@ -97,7 +109,7 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id)
     {
         return view('users/edit', array('user' => User::find($id)));
     }
@@ -114,14 +126,16 @@ class UsersController extends Controller
         // Get user
         $user = User::findOrFail($id);
 
-        if (preg_match('/^data:image\/(\w+);base64,/', $request->input('photo'))) {
-            $data = substr($request->input('photo'), strpos($request->input('photo'), ',') + 1);
+        if (!empty($request->input('photo'))) {
+            if (preg_match('/^data:image\/(\w+);base64,/', $request->input('photo'))) {
+                $data = substr($request->input('photo'), strpos($request->input('photo'), ',') + 1);
 
-            $data = base64_decode($data);
-            Storage::disk('public')->put($request->input('photo_filename'), $data);
+                $data = base64_decode($data);
+                Storage::disk('public')->put($request->input('photo_filename'), $data);
+            }
         }
 
-        if ($this->validator((array) $request->all(), $id) !== false) {
+        if ($this->validator((array) $request->all(), $id)) {
             $user->prefixname = $request->input('prefixname');
             $user->firstname = $request->input('firstname');
             $user->middlename = $request->input('middlename');
@@ -148,7 +162,7 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function restore($id)
+    public function restore(int $id)
     {
         $user = User::onlyTrashed()->where('id', $id)->restore();
         $users = User::onlyTrashed();
@@ -163,7 +177,7 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         User::find($id)->delete();
 
@@ -176,7 +190,7 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function forceDelete($id)
+    public function forceDelete(int $id)
     {
         User::onlyTrashed()->where('id', $id)->forceDelete();
         $users = User::onlyTrashed();
@@ -210,27 +224,22 @@ class UsersController extends Controller
     protected function validator(array $data, $id = null)
     {
         if (!empty($id)) {
-            return Validator::make($data, [
-                'prefixname' => ['required', Rule::in($this->prefixnames)],
-                'firstname' => ['required', 'string', 'max:255'],
-                'middlename' => ['string', 'max:255'],
-                'lastname' => ['required', 'string', 'max:255'],
-                'suffixname' => ['string', 'max:255'],
-                'username' => ['required', 'string', 'max:255', 'unique:users', 'id', $id],
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:users','id', $id],
-                'password' => ['required', 'string', 'min:8', 'confirmed'],
-            ]);
+            $usernameValidator = ['required', 'string', 'max:255', 'unique:users', 'id', $id];
+            $emailValidator = ['required', 'string', 'email', 'max:255', 'unique:users','id', $id];
         } else {
-            return Validator::make($data, [
-                'prefixname' => ['required', Rule::in($this->prefixnames)],
-                'firstname' => ['required', 'string', 'max:255'],
-                'middlename' => ['string', 'max:255'],
-                'lastname' => ['required', 'string', 'max:255'],
-                'suffixname' => ['string', 'max:255'],
-                'username' => ['required', 'string', 'max:255', 'unique:users'],
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'password' => ['required', 'string', 'min:8', 'confirmed'],
-            ]);
+            $usernameValidator = ['required', 'string', 'max:255', 'unique:users'];
+            $emailValidator = ['required', 'string', 'email', 'max:255', 'unique:users'];
         }
+
+        return Validator::make($data, [
+            'prefixname' => ['required', Rule::in($this->prefixnames)],
+            'firstname' => ['required', 'string', 'max:255'],
+            'middlename' => ['string', 'max:255'],
+            'lastname' => ['required', 'string', 'max:255'],
+            'suffixname' => ['string', 'max:255'],
+            'username' => $usernameValidator,
+            'email' => $emailValidator,
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
     }
 }
