@@ -28,6 +28,7 @@ $factory->define(User::class, function (Faker $faker) {
         'username' => Str::random(10),
         'email' => Str::random(10).'@gmail.com',
         'password' => Hash::make('password'),
-        'type' => 'user'
+        'type' => 'user',
+        'photo' => 'default.png'
     ];
 });
